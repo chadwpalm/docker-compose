@@ -221,7 +221,6 @@ services:
       - ${MEDIA_PATH}/Preroll:/volume1/Plex_Media/Preroll
       - ${MEDIA_PATH}/4k_Movies:/volume1/Plex_Media/4k_Movies
       - ${CONFIG_PATH}/plex-dlna:/usr/lib/plexmediaserver/Resources/Profiles
-      - /dev/dri:/dev/dri
     restart: unless-stopped
 
   bazarr:
