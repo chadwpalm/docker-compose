@@ -181,7 +181,6 @@ services:
       - ${CONFIG_PATH}/tdarr/logs:/app/logs
       - ${MEDIA_PATH}:/plex_media
       - ${MEDIA_PATH}/transcode_cache:/temp
-      - /dev/dri:/dev/dri
     devices:
       - /dev/dri:/dev/dri
     logging:
