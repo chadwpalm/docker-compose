@@ -190,11 +190,12 @@ services:
 
   watchtower:
     container_name: watchtower
-    image: containrrr/watchtower:latest
+    image: beatkind/watchtower:latest
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      - DOCKER_API_VERSION=1.43
       - WATCHTOWER_SCHEDULE=0 0 7 ? * *
       - WATCHTOWER_CLEANUP=true
       - TZ=${TZ}
