@@ -105,29 +105,30 @@ services:
     restart: unless-stopped
 
   qbittorrent:
-    image: chadwpalm/qbittorrent:5.0.3
+    image: binhex/arch-qbittorrentvpn:latest
     container_name: qbittorrent
     volumes:
       - ${MEDIA_PATH}:/data
       - ${CONFIG_PATH}/qbittorrent-vpn:/config
     environment:
+      - VPN_ENABLED=yes
+      - VPN_PROV=pia
+      - VPN_CLIENT=openvpn
+      - VPN_USER=${OPENVPN_USERNAME}
+      - VPN_PASS=${OPENVPN_PASSWORD}
+      - VPN_PORT_FORWARDING=yes
+      - OPENVPN_CONFIG=bahamas
+      - LAN_NETWORK=${LAN}
       - PUID=${PUID}
       - PGID=${PGID}
       - UMASK=${UMASK}
       - TZ=${TZ}
-      - OPENVPN_PROVIDER=PIA
-      - OPENVPN_USERNAME=${OPENVPN_USERNAME}
-      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
-      - OPENVPN_CONFIG=bahamas
-      - LAN=${LAN}
-      - DOCKER_CIDR=${DOCKER_CIDR}
       - DNS=8.8.8.8
-      - QBT_SAVE_PATH=/data
     ports:
-      - "8080:8080"
+      - 8080:8080
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
-    restart: on-failure
 
   sabnzbd:
     container_name: sabnzbd
@@ -420,3 +421,23 @@ services:
       - QBT_SKIP_QB_VERSION_CHECK=true
       - TZ=${TZ}
     restart: on-failure:2
+
+  unpackerr:
+    image: golift/unpackerr
+    container_name: unpackerr
+    volumes:
+      - ${MEDIA_PATH}:/data
+      - ${CONFIG_PATH}/unpackerr:/config
+    restart: always
+    user: ${PUID}:${PGID}
+    environment:
+      - TZ=${TZ}
+      - UN_LOG_FILE=/config/unpackerr.log
+      - UN_SONARR_0_URL=http://${SERVER_IP}:8989
+      - UN_SONARR_0_API_KEY=${SONARR_API_KEY}
+      - UN_RADARR_0_URL=http://${SERVER_IP}:7878
+      - UN_RADARR_0_API_KEY=${RADARR_API_KEY}
+      - UN_RADARR_1_URL=http://${SERVER_IP}:7879
+      - UN_RADARR_1_API_KEY=${RADARR4K_API_KEY}
+      - UN_LIDARR_0_URL=http://${SERVER_IP}:8686
+      - UN_LIDARR_0_API_KEY=${LIDARR_API_KEY}
